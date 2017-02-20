@@ -1,0 +1,102 @@
+Application Lifetime
+	Global - Start when the server starts, end when the server ends
+
+Session Lifetime
+	Per-User Variables - "Cookies"
+	req.session
+
+Request Lifetime
+	Local - Only exist for the duration of handling one request
+
+
+Cookies
+	token : data associated with the token
+	123: {}
+	456: {}
+	789: {}
+
+DB:
+	username : password
+	erty : password
+	john : myFAkePassw0rd
+	coop : catttttssss
+	jude : justme
+
+Once john (123) logs in, the token storage looks like:
+	123: { loggedin: true } // or whatever
+	456: {}
+	789: {}
+
+In our backend code, we can ask:
+	if (req.session.loggedin) { ... }
+
+Recap: What does our "req" object have at this point?
+
+req.session
+	Data about the current user
+req.url
+	Current page being requested
+req.method
+	GET, POST, etc.
+req.params
+	e.g.: "/user/:id" sets the req.params.id to whatever is in the place of :id
+
+	http://localhost:8080/user/10
+	req.params.id will be "10"
+
+	If we have "/movies/:name/:rating" and I visit
+	http://localhost:8080/movies/jaws/5
+	req.params.name will be "jaws"
+	req.params.rating will be "5"
+req.query
+	Uses the ?key=value style of data transfer to the server
+
+	e.g. If the url is "/movies" and I visit
+	http://localhost:8080/movies?name=jaws&rating=5
+	req.query.name will be "jaws"
+	req.query.rating will be "5"
+req.body
+	POST request data (can be larger)
+	Can even send file data through req.body
+
+	Client Side:
+	$.post('/movies?topic=shark', {
+		title: "jaws",
+		rating: 5
+	});
+
+	Server Side:
+	req.body.title is "jaws"
+	req.body.rating is "5"
+	** req.query.topic is "shark"
+
+NPM Installations:
+
+	npm install express body-parser express-session --save
+
+	express : server software
+		Gives us req.params
+		Gives us req.query?
+
+		var express = require("express");
+		var app = express();
+
+	body-parser : allows us to handle post requests
+		Gives us req.body
+
+		var bodyParser = require("body-parser");
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({
+			extended: true
+		}));
+
+	express-session : allows us to set up cookies & sessions
+		Gives us req.session
+
+		var session = require("express-session");
+		app.use(session({
+			secret: 'keyboard cat', // secret key
+			resave: false, // default value
+			saveUninitialized: true, // saves empty objects
+		}));
+

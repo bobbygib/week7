@@ -1,0 +1,11 @@
+application liftime varibles
+	global - start when the server starts and ends when the server ends
+
+session lifetime varibles
+	Per-User varibles - CREATES COOKIES
+	node.js var
+		req.session
+
+request lifetime
+	local - only exist for the duration of handling one request
+
